@@ -1,0 +1,26 @@
+# Smithery registry configuration
+# https://smithery.ai/docs/config
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - openaiApiKey
+    properties:
+      openaiApiKey:
+        type: string
+        description: Your OpenAI API key (used for GPT-4o-mini summarization)
+      viddocsUrl:
+        type: string
+        description: Override the VidDocs URL (optional, defaults to https://videowiki.onrender.com)
+        default: https://videowiki.onrender.com
+  commandFunction: |-
+    (config) => ({
+      command: "node",
+      args: ["/path/to/viddocs-mcp/dist/index.js"],
+      env: {
+        OPENAI_API_KEY: config.openaiApiKey,
+        ...(config.viddocsUrl ? { VIDDOCS_URL: config.viddocsUrl } : {}),
+      },
+    })
